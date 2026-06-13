@@ -11,15 +11,18 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      system = "aarch64-darwin";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
+      makeConfig = system: profile: home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        modules = [ profile ];
       };
     in {
-      homeConfigurations."ccnewman" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./home.nix ];
+      homeConfigurations = {
+        "darwin"   = makeConfig "aarch64-darwin"       ./profiles/darwin.nix;
+        "linux"    = makeConfig builtins.currentSystem  ./profiles/linux.nix;
+        "headless" = makeConfig builtins.currentSystem  ./profiles/headless.nix;
       };
     };
 }
