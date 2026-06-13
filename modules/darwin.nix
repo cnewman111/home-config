@@ -1,10 +1,10 @@
 { pkgs, lib, ... }:
 
 {
+  imports = [ ./common-headless.nix ./common-gui.nix ];
+
   home.packages = with pkgs; [
     jetbrains-toolbox
-    _1password-gui
-    _1password
     raycast
     brave
     google-chrome

@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [ ./modules/common.nix ]
+  imports = []
     ++ lib.optionals pkgs.stdenv.isDarwin [ ./modules/darwin.nix ]
     ++ lib.optionals pkgs.stdenv.isLinux [ ./modules/linux.nix ];
 
