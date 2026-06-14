@@ -62,7 +62,7 @@ Optional picks: 1Password, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, Prot
 ```bash
 ./install-linux-apps.sh
 ```
-Includes: JetBrains Toolbox, Brave, Chrome, 1Password*, Spotify, Slack, Zoom (all via snap).
+Includes: JetBrains Toolbox, Ghostty, Brave, Chrome, 1Password*, Spotify, Slack, Zoom (all via snap).
 
 *The snap version of 1Password has limitations: browser extension and app unlock separately, no system authentication, no SSH agent.
 

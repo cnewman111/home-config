@@ -13,7 +13,6 @@ in {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    ghostty
     meld
     pax-utils
     patchelf

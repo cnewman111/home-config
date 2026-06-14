@@ -4,6 +4,7 @@
 
 snaps=$(printf '%s\n' \
   jetbrains-toolbox \
+  ghostty \
   1password \
   brave \
   google-chrome \
