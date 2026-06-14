@@ -12,7 +12,6 @@
 
   home.packages = with pkgs; [
     pax-utils
-    patchelf
   ];
 
   programs.git.settings = {

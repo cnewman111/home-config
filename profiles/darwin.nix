@@ -1,9 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     ../common/cli.nix
     ../common/gui.nix
+    ../karabiner
   ];
 
   home.username = "ccnewman";
@@ -15,7 +16,6 @@
     ghostty-bin
     raycast
     karabiner-elements
-    nerd-fonts.jetbrains-mono
   ];
 
   home.file.".config/ghostty/config".text = ''
@@ -40,10 +40,4 @@
     difftool.prompt = false;
   };
 
-  home.activation.karabinerConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -f ~/.config/karabiner/karabiner.json ]; then
-      mkdir -p ~/.config/karabiner
-      cp ${../karabiner.json} ~/.config/karabiner/karabiner.json
-    fi
-  '';
 }

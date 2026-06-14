@@ -7,5 +7,6 @@
     google-chrome
     _1password-gui
     _1password-cli
+    nerd-fonts.jetbrains-mono
   ];
 }

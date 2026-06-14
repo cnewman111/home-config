@@ -24,9 +24,20 @@ Pick the profile for your machine:
 | Linux desktop | `linux`    |
 | Linux server  | `headless` |
 
+The `-b backup` flag renames any existing shell config files (`.zshrc`, `.bashrc`, etc.) to `.zshrc.backup` before Home Manager writes its own. Always use it on first apply to avoid losing your existing config.
+
 ```bash
-nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
+nix run home-manager/master -- switch -b backup --flake ~/.config/home-manager#<profile>
 ```
+
+## Local overrides
+
+Home Manager generates your shell config but sources local override files if they exist:
+
+- `~/.zshrc.local` — machine-specific zsh config
+- `~/.bashrc.local` — machine-specific bash config
+
+Put anything you don't want in the repo here (work credentials, private aliases, machine-specific PATH entries, etc.). These files are never managed or overwritten by Home Manager.
 
 ## Usage
 
