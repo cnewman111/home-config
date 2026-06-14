@@ -7,7 +7,6 @@ snaps=$(printf '%s\n' \
   ghostty \
   1password \
   brave \
-  google-chrome \
   spotify \
   slack \
   zoom-client \
@@ -18,7 +17,10 @@ snaps=$(printf '%s\n' \
 
 if [ -n "$snaps" ]; then
   for snap in $snaps; do
-    sudo snap install "$snap"
+    case "$snap" in
+      ghostty) sudo snap install "$snap" --classic ;;
+      *)       sudo snap install "$snap" ;;
+    esac
   done
 else
   echo "Nothing to install."
