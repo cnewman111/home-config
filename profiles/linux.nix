@@ -18,7 +18,7 @@
     patchelf
   ];
 
-  programs.git.extraConfig = {
+  programs.git.settings = {
     diff.tool = "meld";
     difftool.meld.cmd = ''meld "$LOCAL" "$REMOTE"'';
     difftool.prompt = false;

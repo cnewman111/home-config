@@ -6,6 +6,6 @@
     brave
     google-chrome
     _1password-gui
-    _1password
+    _1password-cli
   ];
 }

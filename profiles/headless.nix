@@ -15,7 +15,7 @@
     patchelf
   ];
 
-  programs.git.extraConfig = {
+  programs.git.settings = {
     diff.tool = "nvimdiff";
     difftool.nvimdiff.cmd = ''nvim -d "$LOCAL" "$REMOTE"'';
     difftool.prompt = false;

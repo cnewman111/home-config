@@ -21,8 +21,8 @@
     in {
       homeConfigurations = {
         "darwin"   = makeConfig "aarch64-darwin"       ./profiles/darwin.nix;
-        "linux"    = makeConfig builtins.currentSystem  ./profiles/linux.nix;
-        "headless" = makeConfig builtins.currentSystem  ./profiles/headless.nix;
+        "linux"    = makeConfig "x86_64-linux"  ./profiles/linux.nix;
+        "headless" = makeConfig "x86_64-linux"  ./profiles/headless.nix;
       };
     };
 }
