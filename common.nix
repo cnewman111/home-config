@@ -56,7 +56,9 @@ in {
     initContent = ''
       [ -f ~/.zshrc.local ] && source ~/.zshrc.local
     '';
-    profileExtra = builtins.readFile ./zprofile;
+    profileExtra = builtins.readFile ./zprofile + ''
+      [ -f ~/.zprofile.local ] && source ~/.zprofile.local
+    '';
   };
 
   programs.bash = {
