@@ -15,6 +15,7 @@
 
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
+      userInfo = import ./user.nix;
       makeConfig = system: profile: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
@@ -31,7 +32,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.ccnewman = import ./profiles/darwin.nix;
+            home-manager.users.${userInfo.username} = import ./profiles/darwin.nix;
           }
         ];
       };

@@ -15,6 +15,8 @@ Clone wherever you keep projects. The examples below assume `~/sources/home-conf
 nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-config.git ~/sources/home-config
 ```
 
+If you're forking, edit `user.nix` to set your username — that's the only place it lives.
+
 ### 3. Apply the config
 
 | Machine type   | Profile    | Command                                                                                  |
@@ -94,6 +96,7 @@ nix flake update ~/sources/home-config
 ```
 home-config/
 ├── flake.nix                     # entry point, pins nixpkgs, home-manager, nix-darwin
+├── user.nix                      # username (edit this when forking)
 ├── common.nix                    # packages, shell config, git, aliases shared across machines
 ├── zprofile                      # existing zsh profile (included by common.nix)
 ├── install-mac-apps.sh           # optional Mac GUI apps (brew casks)

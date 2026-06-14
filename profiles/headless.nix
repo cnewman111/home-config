@@ -1,12 +1,14 @@
 { pkgs, ... }:
 
-{
+let
+  userInfo = import ../user.nix;
+in {
   imports = [
     ../common.nix
   ];
 
-  home.username = "ccnewman";
-  home.homeDirectory = "/home/ccnewman";
+  home.username = userInfo.username;
+  home.homeDirectory = "/home/${userInfo.username}";
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
