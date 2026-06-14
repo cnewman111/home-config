@@ -45,7 +45,7 @@ Then install the apps:
 ```bash
 ./install-mac-apps.sh
 ```
-Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome, Spotify, Discord, Slack, Zoom, ProtonVPN.
+Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN.
 
 **Linux:**
 ```bash
@@ -82,17 +82,19 @@ nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
 
 ```
 home-config/
-├── flake.nix          # entry point, pins nixpkgs and home-manager versions
-├── common.nix         # packages, shell config, git, and aliases for all machines
-├── zshrc              # existing zsh config (included by common.nix)
-├── zprofile           # existing zsh profile (included by common.nix)
+├── flake.nix               # entry point, pins nixpkgs and home-manager versions
+├── common.nix              # packages, shell config, git, and aliases for all machines
+├── zshrc                   # existing zsh config (included by common.nix)
+├── zprofile                # existing zsh profile (included by common.nix)
+├── install-mac-apps.sh     # GUI apps for Mac (brew casks)
+├── install-linux-apps.sh   # GUI apps for Linux (snap)
 ├── configs/
-│   ├── karabiner.json # karabiner key mapping template (seeded on first run)
-│   └── nvim/lua/      # custom LazyVim plugin config
+│   ├── karabiner.json      # karabiner key mapping template (seeded on first run)
+│   └── nvim/lua/           # custom LazyVim plugin config
 └── profiles/
-    ├── darwin.nix     # Mac desktop
-    ├── linux.nix      # Linux desktop
-    └── headless.nix   # Linux server / headless
+    ├── darwin.nix          # Mac desktop
+    ├── linux.nix           # Linux desktop
+    └── headless.nix        # Linux server / headless
 ```
 
 Each profile imports `common.nix` and adds only what's specific to that platform.
