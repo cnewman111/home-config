@@ -52,19 +52,39 @@ nix flake update ~/.config/home-manager
 nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
 ```
 
+## GUI apps
+
+These apps are installed outside of Nix. Run the script for your platform after applying the Nix config:
+
+**Mac:**
+```bash
+./install-mac-apps.sh
+```
+Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome.
+
+**Linux:**
+```bash
+./install-linux-apps.sh
+```
+Includes: JetBrains Toolbox, Brave, Chrome, 1Password* (all via snap).
+
+*The snap version of 1Password has limitations: browser extension and app unlock separately, no system authentication, no SSH agent.
+
 ## Structure
 
 ```
 home-config/
-├── flake.nix              # entry point, pins nixpkgs and home-manager versions
-├── karabiner.json         # karabiner-elements key mapping template (Mac)
-├── common/
-│   ├── cli.nix            # CLI tools, git, shell config, and aliases
-│   └── gui.nix            # GUI apps shared across desktop platforms
+├── flake.nix          # entry point, pins nixpkgs and home-manager versions
+├── common.nix         # packages, shell config, git, and aliases for all machines
+├── zshrc              # existing zsh config (included by common.nix)
+├── zprofile           # existing zsh profile (included by common.nix)
+├── configs/
+│   ├── karabiner.json # karabiner key mapping template (seeded on first run)
+│   └── nvim/lua/      # custom LazyVim plugin config
 └── profiles/
-    ├── darwin.nix         # Mac desktop
-    ├── linux.nix          # Linux desktop
-    └── headless.nix       # Linux server / headless
+    ├── darwin.nix     # Mac desktop
+    ├── linux.nix      # Linux desktop
+    └── headless.nix   # Linux server / headless
 ```
 
-Profiles are the three user-facing machine configs. Each imports from `common/` and adds only what's specific to that platform.
+Each profile imports `common.nix` and adds only what's specific to that platform.

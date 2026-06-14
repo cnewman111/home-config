@@ -1,22 +1,17 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
-    ../common/cli.nix
-    ../common/gui.nix
-    ../karabiner
+    ../common.nix
   ];
 
   home.username = "ccnewman";
   home.homeDirectory = "/Users/ccnewman";
+
+  home.packages = with pkgs; [ ghostty-bin ];
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
-  home.packages = with pkgs; [
-    ghostty-bin
-    raycast
-    karabiner-elements
-  ];
 
   home.file.".config/ghostty/config".text = ''
     font-family = JetBrainsMono Nerd Font
@@ -32,6 +27,8 @@
     keybind = opt+d=new_split:right
     keybind = ctrl+n=new_tab
     keybind = ctrl+q=close_tab
+    keybind = ctrl+h=previous_tab
+    keybind = ctrl+l=next_tab
   '';
 
   programs.git.settings = {
@@ -40,4 +37,10 @@
     difftool.prompt = false;
   };
 
+  home.activation.karabinerConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -f ~/.config/karabiner/karabiner.json ]; then
+      mkdir -p ~/.config/karabiner
+      cp ${../configs/karabiner.json} ~/.config/karabiner/karabiner.json
+    fi
+  '';
 }

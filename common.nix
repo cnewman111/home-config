@@ -13,9 +13,8 @@ let
     ndc = "nix develop --command";
   };
 in {
-  imports = [ ../nvim ];
-
   home.packages = with pkgs; [
+    neovim
     tmux
     ripgrep
     bat
@@ -25,7 +24,18 @@ in {
     curl
     lazygit
     tree-sitter
+    _1password-cli
+    nerd-fonts.jetbrains-mono
   ];
+
+  home.activation.lazyVim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -d ~/.config/nvim ]; then
+      ${pkgs.git}/bin/git clone https://github.com/LazyVim/starter ~/.config/nvim
+      rm -rf ~/.config/nvim/.git
+    fi
+    mkdir -p ~/.config/nvim/lua
+    cp -r ${./configs/nvim/lua}/. ~/.config/nvim/lua/
+  '';
 
   programs.git = {
     enable = true;
@@ -43,11 +53,10 @@ in {
     enable = true;
     defaultKeymap = "viins";
     shellAliases = commonAliases;
-    initContent = builtins.readFile ../zshrc;
-    profileExtra = builtins.readFile ../zprofile;
-    initContent = lib.mkAfter ''
+    initContent = builtins.readFile ./zshrc + ''
       [ -f ~/.zshrc.local ] && source ~/.zshrc.local
     '';
+    profileExtra = builtins.readFile ./zprofile;
   };
 
   programs.bash = {
