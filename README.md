@@ -19,9 +19,9 @@ nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-con
 
 | Machine type   | Profile    | Command                                                                                  |
 |----------------|------------|------------------------------------------------------------------------------------------|
-| Mac            | `darwin`   | `sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin`                 |
-| Linux desktop  | `linux`    | `nix run home-manager/master -- switch --flake ~/sources/home-config#linux`              |
-| Linux headless | `headless` | `nix run home-manager/master -- switch --flake ~/sources/home-config#headless`           |
+| Mac            | `darwin`   | `sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin --impure`                 |
+| Linux desktop  | `linux`    | `nix run home-manager/master -- switch --flake ~/sources/home-config#linux --impure`              |
+| Linux headless | `headless` | `nix run home-manager/master -- switch --flake ~/sources/home-config#headless --impure`           |
 
 **Mac prerequisites:**
 
@@ -31,7 +31,7 @@ nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-con
    ```
 2. `sudo` is required because system activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix` on its PATH, use:
    ```bash
-   sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin
+   sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin --impure
    ```
 3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox) is already installed *outside* of Homebrew, run this to hand ownership to brew without re-downloading:
    ```bash
@@ -41,7 +41,7 @@ nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-con
 
 After the first apply, the Mac command shortens to:
 ```bash
-sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
+sudo darwin-rebuild switch --flake ~/sources/home-config#darwin --impure
 ```
 
 **Pre-existing dotfiles:** home-manager will refuse to overwrite an existing `~/.zshrc`, `~/.bashrc`, etc. Move them aside (or merge what you want into `~/.zshrc.local`) before applying.
@@ -79,10 +79,10 @@ Apply changes or update packages:
 
 ```bash
 # Mac — apply changes after editing any Mac config
-sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
+sudo darwin-rebuild switch --flake ~/sources/home-config#darwin --impure
 
 # Linux — apply changes after editing the profile
-nix run home-manager/master -- switch --flake ~/sources/home-config#<profile>
+nix run home-manager/master -- switch --flake ~/sources/home-config#<profile> --impure
 
 # update all packages to latest (any platform)
 nix flake update ~/sources/home-config

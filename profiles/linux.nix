@@ -5,8 +5,8 @@
     ../common.nix
   ];
 
-  home.username = "ccnewman";
-  home.homeDirectory = "/home/ccnewman";
+  home.username = builtins.getEnv "USER";
+  home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
