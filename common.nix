@@ -67,5 +67,8 @@ in {
     initExtra = ''
       [ -f ~/.bashrc.local ] && source ~/.bashrc.local
     '';
+    profileExtra = ''
+      [ -f ~/.profile.local ] && source ~/.profile.local
+    '';
   };
 }
