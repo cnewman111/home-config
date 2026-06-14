@@ -30,6 +30,31 @@ The `-b backup` flag renames any existing shell config files (`.zshrc`, `.bashrc
 nix run home-manager/master -- switch -b backup --flake ~/.config/home-manager#<profile>
 ```
 
+### 4. GUI apps
+
+These apps are installed outside of Nix and receive automatic updates via their respective stores. Run **after** applying the Nix config — Nix writes config files (e.g. Karabiner) that these apps pick up on first launch.
+
+**Mac:**
+
+Install [Homebrew](https://brew.sh) if not already present:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then install the apps:
+```bash
+./install-mac-apps.sh
+```
+Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome.
+
+**Linux:**
+```bash
+./install-linux-apps.sh
+```
+Includes: JetBrains Toolbox, Brave, Chrome, 1Password* (all via snap).
+
+*The snap version of 1Password has limitations: browser extension and app unlock separately, no system authentication, no SSH agent.
+
 ## Local overrides
 
 Home Manager generates your shell config but sources local override files if they exist:
@@ -52,23 +77,6 @@ nix flake update ~/.config/home-manager
 nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
 ```
 
-## GUI apps
-
-These apps are installed outside of Nix. Run the script for your platform after applying the Nix config:
-
-**Mac:**
-```bash
-./install-mac-apps.sh
-```
-Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome.
-
-**Linux:**
-```bash
-./install-linux-apps.sh
-```
-Includes: JetBrains Toolbox, Brave, Chrome, 1Password* (all via snap).
-
-*The snap version of 1Password has limitations: browser extension and app unlock separately, no system authentication, no SSH agent.
 
 ## Structure
 
