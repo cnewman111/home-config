@@ -45,13 +45,13 @@ Then install the apps:
 ```bash
 ./install-mac-apps.sh
 ```
-Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome.
+Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome, Spotify, Discord, Slack, Zoom, ProtonVPN.
 
 **Linux:**
 ```bash
 ./install-linux-apps.sh
 ```
-Includes: JetBrains Toolbox, Brave, Chrome, 1Password* (all via snap).
+Includes: JetBrains Toolbox, Brave, Chrome, 1Password*, Spotify, Slack, Zoom (all via snap).
 
 *The snap version of 1Password has limitations: browser extension and app unlock separately, no system authentication, no SSH agent.
 
