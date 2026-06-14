@@ -34,8 +34,12 @@ in {
       rm -rf ~/.config/nvim/.git
     fi
     mkdir -p ~/.config/nvim/lua
+    chmod -R u+w ~/.config/nvim/lua 2>/dev/null || true
     cp -r ${./configs/nvim/lua}/. ~/.config/nvim/lua/
+    chmod -R u+w ~/.config/nvim/lua
   '';
+
+  home.sessionVariables.EDITOR = "nvim";
 
   programs.git = {
     enable = true;
@@ -44,6 +48,7 @@ in {
       user.email = "54.central-view@icloud.com";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      core.editor = "nvim";
     };
   };
 
