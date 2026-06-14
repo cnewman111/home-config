@@ -3,11 +3,7 @@
 # Safe to re-run — Homebrew skips already-installed apps.
 
 casks=$(printf '%s\n' \
-  karabiner-elements \
-  jetbrains-toolbox \
-  raycast \
   1password \
-  brave-browser \
   google-chrome \
   spotify \
   discord \

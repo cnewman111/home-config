@@ -53,7 +53,7 @@ in {
     enable = true;
     defaultKeymap = "viins";
     shellAliases = commonAliases;
-    initContent = builtins.readFile ./zshrc + ''
+    initContent = ''
       [ -f ~/.zshrc.local ] && source ~/.zshrc.local
     '';
     profileExtra = builtins.readFile ./zprofile;

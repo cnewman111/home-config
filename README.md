@@ -1,6 +1,6 @@
 # home-config
 
-Personal configuration managed with [Nix Home Manager](https://github.com/nix-community/home-manager).
+Personal configuration managed with [Nix Home Manager](https://github.com/nix-community/home-manager). On macOS, [nix-darwin](https://github.com/nix-darwin/nix-darwin) layers on top to manage system-level config and core Homebrew casks.
 
 ## Setup
 
@@ -10,42 +10,53 @@ Install Nix using the [Determinate Systems installer](https://determinate.system
 
 ### 2. Clone this repo
 
+Clone wherever you keep projects. The examples below assume `~/sources/home-config`.
 ```bash
-nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-config.git ~/.config/home-manager
+nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-config.git ~/sources/home-config
 ```
 
 ### 3. Apply the config
 
-Pick the profile for your machine:
+| Machine type   | Profile    | Command                                                                                  |
+|----------------|------------|------------------------------------------------------------------------------------------|
+| Mac            | `darwin`   | `sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin`                 |
+| Linux desktop  | `linux`    | `nix run home-manager/master -- switch --flake ~/sources/home-config#linux`              |
+| Linux headless | `headless` | `nix run home-manager/master -- switch --flake ~/sources/home-config#headless`           |
 
-| Machine type  | Profile    |
-|---------------|------------|
-| Mac           | `darwin`   |
-| Linux desktop | `linux`    |
-| Linux server  | `headless` |
+**Mac prerequisites:**
 
-The `-b backup` flag renames any existing shell config files (`.zshrc`, `.bashrc`, etc.) to `.zshrc.backup` before Home Manager writes its own. Always use it on first apply to avoid losing your existing config.
+1. Install [Homebrew](https://brew.sh) — nix-darwin's homebrew module drives it but does not bootstrap it.
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+2. `sudo` is required because system activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix` on its PATH, use:
+   ```bash
+   sudo $(which nix) run nix-darwin -- switch --flake ~/sources/home-config#darwin
+   ```
+3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox) is already installed *outside* of Homebrew, run this once per app to hand ownership to brew without re-downloading:
+   ```bash
+   brew install --cask --adopt <cask-name>
+   ```
+   Casks already installed via brew are fine — `brew bundle` skips them.
 
+The Mac command installs nix-darwin, then runs home-manager and the core casks in one switch.
+
+After the first apply, the Mac command shortens to:
 ```bash
-nix run home-manager/master -- switch -b backup --flake ~/.config/home-manager#<profile>
+sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
 ```
 
-### 4. GUI apps
+**Pre-existing dotfiles:** home-manager will refuse to overwrite an existing `~/.zshrc`, `~/.bashrc`, etc. Move them aside (or merge what you want into `~/.zshrc.local`) before applying.
 
-These apps are installed outside of Nix and receive automatic updates via their respective stores. Run **after** applying the Nix config — Nix writes config files (e.g. Karabiner) that these apps pick up on first launch.
+### 4. Optional GUI apps
+
+Apps that aren't on every machine live in interactive install scripts. Run **after** applying the Nix config.
 
 **Mac:**
-
-Install [Homebrew](https://brew.sh) if not already present:
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Then install the apps:
 ```bash
 ./install-mac-apps.sh
 ```
-Includes: Karabiner-Elements, JetBrains Toolbox, Raycast, 1Password, Brave, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN.
+Optional picks: 1Password, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN.
 
 **Linux:**
 ```bash
@@ -69,32 +80,35 @@ Put anything you don't want in the repo here (work credentials, private aliases,
 Apply changes or update packages:
 
 ```bash
-# apply changes after editing a profile
-nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
+# Mac — apply changes after editing any Mac config
+sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
 
-# update all packages to latest
-nix flake update ~/.config/home-manager
-nix run home-manager/master -- switch --flake ~/.config/home-manager#<profile>
+# Linux — apply changes after editing the profile
+nix run home-manager/master -- switch --flake ~/sources/home-config#<profile>
+
+# update all packages to latest (any platform)
+nix flake update ~/sources/home-config
+# then re-run the switch command above
 ```
-
 
 ## Structure
 
 ```
 home-config/
-├── flake.nix               # entry point, pins nixpkgs and home-manager versions
-├── common.nix              # packages, shell config, git, and aliases for all machines
-├── zshrc                   # existing zsh config (included by common.nix)
-├── zprofile                # existing zsh profile (included by common.nix)
-├── install-mac-apps.sh     # GUI apps for Mac (brew casks)
-├── install-linux-apps.sh   # GUI apps for Linux (snap)
+├── flake.nix                     # entry point, pins nixpkgs, home-manager, nix-darwin
+├── common.nix                    # packages, shell config, git, aliases shared across machines
+├── zprofile                      # existing zsh profile (included by common.nix)
+├── install-mac-apps.sh           # optional Mac GUI apps (brew casks)
+├── install-linux-apps.sh         # optional Linux GUI apps (snap)
 ├── configs/
-│   ├── karabiner.json      # karabiner key mapping template (seeded on first run)
-│   └── nvim/lua/           # custom LazyVim plugin config
+│   ├── karabiner.json            # karabiner key mapping template (seeded on first run)
+│   └── nvim/lua/                 # custom LazyVim plugin config
 └── profiles/
-    ├── darwin.nix          # Mac desktop
-    ├── linux.nix           # Linux desktop
-    └── headless.nix        # Linux server / headless
+    ├── darwin.nix                # Mac home-manager (user) config
+    ├── darwin-system.nix         # Mac nix-darwin (system) config + core casks
+    ├── linux.nix                 # Linux desktop
+    └── headless.nix              # Linux server / headless
 ```
 
-Each profile imports `common.nix` and adds only what's specific to that platform.
+- On Mac, `darwin-system.nix` is the entry point and pulls in `darwin.nix` as a home-manager module. 
+- On Linux, because there is more variety in system hardware, we do not adjust system settings. All modules are installed via the script.
