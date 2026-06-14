@@ -15,9 +15,19 @@ Clone wherever you keep projects. The examples below assume `~/sources/home-conf
 nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-config.git ~/sources/home-config
 ```
 
-If you're forking, edit `user.nix` to set your username — that's the only place it lives.
+### 3. Pick a machine branch
 
-### 3. Apply the config
+`main` ships with a placeholder username so applying it directly fails fast. Every machine gets its own long-lived branch:
+
+```bash
+git checkout -b machine/$(hostname -s)
+$EDITOR user.nix          # set: username = "your-username";
+git commit -am 'set username for this machine'
+```
+
+Stay on this branch for all future `switch` runs. To pick up shared updates, pull `main` into the branch — don't merge the username change back to `main`.
+
+### 4. Apply the config
 
 | Machine type   | Profile    | Command                                                                                  |
 |----------------|------------|------------------------------------------------------------------------------------------|
@@ -48,7 +58,7 @@ sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
 
 **Pre-existing dotfiles:** home-manager will refuse to overwrite an existing `~/.zshrc`, `~/.bashrc`, etc. Move them aside (or merge what you want into `~/.zshrc.local`) before applying.
 
-### 4. Optional GUI apps
+### 5. Optional GUI apps
 
 Apps that aren't on every machine live in interactive install scripts. Run **after** applying the Nix config.
 

@@ -26,7 +26,9 @@ There are no tests, linters, or build steps — the only way to validate a chang
 
 ## Setting up a new machine
 
-`user.nix` is the single source of truth for the username (imported by `flake.nix`, `darwin-system.nix`, `linux.nix`, and `headless.nix`). On any new machine whose username differs from `main`'s, create a per-machine branch first, edit `user.nix` on that branch, and stay on the branch for all subsequent `switch` runs — don't merge the username change back to `main`. Pull `main` into the branch when picking up new shared config.
+`user.nix` is the single source of truth for the username (imported by `flake.nix`, `darwin-system.nix`, `linux.nix`, and `headless.nix`). On `main` it's a `throw` with branching instructions, so applying `main` directly fails fast.
+
+Every machine gets its own long-lived branch (`machine/<hostname>`): create it, replace the throw in `user.nix` with `username = "..."`, commit, and stay on that branch for every `switch`. Pull `main` into the branch to pick up shared updates — never merge the username change back to `main`.
 
 ## Architecture
 
