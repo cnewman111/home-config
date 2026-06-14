@@ -1,22 +1,18 @@
 { ... }:
 
-let
-  # Under sudo, $USER is "root" — fall through to $SUDO_USER which sudo sets to the caller.
-  user = let u = builtins.getEnv "SUDO_USER"; in if u != "" then u else builtins.getEnv "USER";
-  home = "/Users/${user}";
-in {
+{
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
 
   # Determinate Systems installer manages the Nix daemon and settings.
   nix.enable = false;
 
-  system.primaryUser = user;
+  system.primaryUser = "ccnewman";
   system.stateVersion = 5;
 
-  users.users.${user} = {
-    name = user;
-    inherit home;
+  users.users.ccnewman = {
+    name = "ccnewman";
+    home = "/Users/ccnewman";
   };
 
   homebrew = {

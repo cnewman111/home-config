@@ -5,6 +5,9 @@
     ../common.nix
   ];
 
+  home.username = "ccnewman";
+  home.homeDirectory = "/Users/ccnewman";
+
   home.packages = with pkgs; [ ghostty-bin ];
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;

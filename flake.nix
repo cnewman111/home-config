@@ -15,8 +15,6 @@
 
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
-      # Under sudo, $USER is "root" — fall through to $SUDO_USER which sudo sets to the caller.
-      user = let u = builtins.getEnv "SUDO_USER"; in if u != "" then u else builtins.getEnv "USER";
       makeConfig = system: profile: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
@@ -33,7 +31,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${user} = import ./profiles/darwin.nix;
+            home-manager.users.ccnewman = import ./profiles/darwin.nix;
           }
         ];
       };
