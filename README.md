@@ -31,15 +31,13 @@ nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-con
    ```
 2. `sudo` is required because system activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix` on its PATH, use:
    ```bash
-   sudo $(which nix) run nix-darwin -- switch --flake ~/sources/home-config#darwin
+   sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin
    ```
-3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox) is already installed *outside* of Homebrew, run this once per app to hand ownership to brew without re-downloading:
+3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox) is already installed *outside* of Homebrew, run this to hand ownership to brew without re-downloading:
    ```bash
    brew install --cask --adopt <cask-name>
    ```
    Casks already installed via brew are fine — `brew bundle` skips them.
-
-The Mac command installs nix-darwin, then runs home-manager and the core casks in one switch.
 
 After the first apply, the Mac command shortens to:
 ```bash
