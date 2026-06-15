@@ -30,6 +30,7 @@ in {
       "raycast"
       "brave-browser"
       "jetbrains-toolbox"
+      "ghostty"
     ];
     brews = [
       "displayplacer"

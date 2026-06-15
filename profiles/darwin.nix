@@ -5,7 +5,6 @@
     ../common.nix
   ];
 
-  home.packages = with pkgs; [ ghostty-bin ];
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
