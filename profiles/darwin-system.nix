@@ -37,6 +37,7 @@ in {
   };
 
   system.defaults.NSGlobalDomain."com.apple.trackpad.scaling" = 0.6875;
+  system.defaults.dock.autohide = true;
 
   # Lock the built-in display to "Most Space" (2056x1329) at every login.
   # Runs as user (not root) because WindowServer only accepts display changes from the
