@@ -35,9 +35,7 @@
   };
 
   home.activation.karabinerConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -f ~/.config/karabiner/karabiner.json ]; then
-      mkdir -p ~/.config/karabiner
-      cp ${../configs/karabiner.json} ~/.config/karabiner/karabiner.json
-    fi
+    mkdir -p ~/.config/karabiner
+    install -m 644 ${../configs/karabiner.json} ~/.config/karabiner/karabiner.json
   '';
 }
