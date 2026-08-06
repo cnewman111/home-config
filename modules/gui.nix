@@ -28,14 +28,18 @@ in {
     keybind = ${mod}+l=goto_split:right
     keybind = ${mod}+n=new_split:auto
     keybind = ${mod}+q=close_surface
-    keybind = ${mod}+w=new_split:up
-    keybind = ${mod}+a=new_split:left
-    keybind = ${mod}+s=new_split:down
-    keybind = ${mod}+d=new_split:right
+    keybind = shift+${mod}+w=new_split:up
+    keybind = shift+${mod}+a=new_split:left
+    keybind = shift+${mod}+s=new_split:down
+    keybind = shift+${mod}+d=new_split:right
     keybind = shift+${mod}+h=resize_split:left,40
     keybind = shift+${mod}+j=resize_split:down,40
     keybind = shift+${mod}+k=resize_split:up,40
     keybind = shift+${mod}+l=resize_split:right,40
+    keybind = ${mod}+u=scroll_page_fractional:-0.5
+    keybind = ${mod}+d=scroll_page_fractional:0.5
+    keybind = ${mod}+g=scroll_to_top
+    keybind = shift+${mod}+g=scroll_to_bottom
     keybind = ${mod}+e=equalize_splits
     keybind = ${mod}+f=toggle_fullscreen
     keybind = ctrl+n=new_tab
