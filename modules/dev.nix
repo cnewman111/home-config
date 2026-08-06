@@ -8,12 +8,22 @@
     bat
     fzf
     fd
-    btop
     curl
     lazygit
     tree-sitter
     _1password-cli
   ];
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      vim_keys = true;
+      theme_background = false;
+      truecolor = true;
+      proc_tree = true;
+      proc_aggregate = true;
+    };
+  };
 
   home.activation.lazyVim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d ~/.config/nvim ]; then
