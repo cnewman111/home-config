@@ -32,6 +32,12 @@ in {
     keybind = ${mod}+a=new_split:left
     keybind = ${mod}+s=new_split:down
     keybind = ${mod}+d=new_split:right
+    keybind = shift+${mod}+h=resize_split:left,40
+    keybind = shift+${mod}+j=resize_split:down,40
+    keybind = shift+${mod}+k=resize_split:up,40
+    keybind = shift+${mod}+l=resize_split:right,40
+    keybind = ${mod}+e=equalize_splits
+    keybind = ${mod}+f=toggle_fullscreen
     keybind = ctrl+n=new_tab
     keybind = ctrl+q=close_tab
   '';
