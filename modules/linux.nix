@@ -18,6 +18,10 @@
     meld
     pax-utils
     patchelf
+    # TUI for pairing/connecting bluetooth devices without the GNOME panel.
+    # A client for the system bluetoothd — Ubuntu still owns the daemon.
+    # Linux-only: it speaks BlueZ over D-Bus, which macOS has no equivalent of.
+    bluetuith
   ];
 
   programs.git.settings = {
