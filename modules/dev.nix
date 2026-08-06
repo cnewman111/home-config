@@ -17,6 +17,9 @@
   programs.btop = {
     enable = true;
     settings = {
+      # btop rewrites its config on quit, but Home Manager makes it a read-only
+      # symlink into the store — that write would fail on every exit.
+      save_config_on_exit = false;
       vim_keys = true;
       theme_background = false;
       truecolor = true;

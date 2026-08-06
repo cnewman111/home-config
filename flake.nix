@@ -31,6 +31,9 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            # Rename pre-existing dotfiles instead of aborting activation when
+            # a newly-managed file is already in the way.
+            home-manager.backupFileExtension = "before-hm";
             home-manager.users.${username}.imports = [
               ./modules/common.nix
               (hostDir + "/home.nix")

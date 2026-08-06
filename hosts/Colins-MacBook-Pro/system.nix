@@ -29,6 +29,7 @@
       "brave-browser"
       "jetbrains-toolbox"
       "ghostty"
+      "claude"
     ];
     brews = [
       "displayplacer"
