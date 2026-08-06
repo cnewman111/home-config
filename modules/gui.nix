@@ -1,7 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   mod = if pkgs.stdenv.isDarwin then "opt" else "alt";
+  # On Linux the login shell is still bash (nix zsh isn't in /etc/shells), so
+  # ghostty is told to launch zsh directly. macOS already defaults to zsh.
+  shellCommand = lib.optionalString pkgs.stdenv.isLinux ''
+    command = ${pkgs.zsh}/bin/zsh
+  '';
 in {
   home.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
@@ -10,6 +15,7 @@ in {
   home.file.".config/ghostty/config".text = ''
     font-family = JetBrainsMono Nerd Font
     theme = Idea
+    ${shellCommand}
     keybind = ${mod}+h=goto_split:left
     keybind = ${mod}+j=goto_split:bottom
     keybind = ${mod}+k=goto_split:top

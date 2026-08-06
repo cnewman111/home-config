@@ -12,6 +12,7 @@
 # Managed here:
 #   keymaps/GNOME copy.xml     — key bindings (all IDEs)
 #   options/ui.lnf.xml         — UI_DENSITY=COMPACT (all IDEs)
+#   options/terminal-local.xml — built-in terminal uses zsh (all IDEs)
 #   options/window.layouts.xml — tool window order (CLion only)
 #
 # The layout puts alt+1..6 in the upper left sidebar and alt+7,8,9,0 in the
@@ -30,9 +31,20 @@
 # The IDE rewrites these files when you change settings in its GUI, and
 # activation overwrites them back on the next switch — so edit the repo copies
 # under configs/jetbrains/, not the GUI. Restart the IDE to pick up changes.
-{ lib, ... }:
+{ pkgs, lib, ... }:
 
-{
+let
+  # The IDE's built-in terminal defaults to the login shell (bash here), so
+  # point it at zsh explicitly to match ghostty. Generated rather than a static
+  # file in configs/ so the store path isn't hardcoded.
+  terminalLocal = pkgs.writeText "terminal-local.xml" ''
+    <application>
+      <component name="TerminalLocalOptions">
+        <option name="shellPath" value="${pkgs.zsh}/bin/zsh" />
+      </component>
+    </application>
+  '';
+in {
   home.activation.jetbrainsKeymap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     for dir in "$HOME"/.config/JetBrains/*/; do
       [ -d "$dir" ] || continue
@@ -41,6 +53,8 @@
         "$dir/keymaps/GNOME copy.xml"
       $DRY_RUN_CMD install -m 644 ${../configs/jetbrains/ui.lnf.xml} \
         "$dir/options/ui.lnf.xml"
+      $DRY_RUN_CMD install -m 644 ${terminalLocal} \
+        "$dir/options/terminal-local.xml"
 
       # Tool window layout is CLion-only: it references CMake/Meson, and the
       # sidebar order is built around CLion's alt+N bindings. Other IDEs keep
