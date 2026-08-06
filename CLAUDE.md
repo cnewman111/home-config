@@ -12,7 +12,8 @@ Organized by **machine, not platform**: `hosts/<hostname>/home.nix` composes the
 
 ```bash
 # Linux — attr auto-detects as $(whoami)@$(hostname -s)
-nix run home-manager/master -- switch --flake ~/sources/home-config
+# or just: apply-home-config   (alias defined per-platform in modules/{linux,darwin}.nix)
+home-manager switch -b before-hm --flake ~/sources/home-config
 
 # Mac (first run, or any time nix isn't on sudo's PATH)
 sudo nix run nix-darwin -- switch --flake ~/sources/home-config#Colins-MacBook-Pro
