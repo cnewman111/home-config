@@ -1,0 +1,48 @@
+name: eval
+
+# Every host must still evaluate. This only evaluates, never builds, so the
+# aarch64-darwin config is checked from a free ubuntu runner too.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      # Hosts are discovered from the flake, so adding a machine needs no edit
+      # here. jq is preinstalled on ubuntu runners.
+      - name: Evaluate every host
+        run: |
+          set -euo pipefail
+
+          status=0
+
+          for name in $(nix eval --json '.#homeConfigurations' --apply builtins.attrNames | jq -r '.[]'); do
+            echo "::group::homeConfigurations.\"$name\""
+            if nix eval --raw ".#homeConfigurations.\"$name\".activationPackage.drvPath"; then
+              echo
+            else
+              echo "FAILED: homeConfigurations.\"$name\""
+              status=1
+            fi
+            echo "::endgroup::"
+          done
+
+          for name in $(nix eval --json '.#darwinConfigurations' --apply builtins.attrNames | jq -r '.[]'); do
+            echo "::group::darwinConfigurations.\"$name\""
+            if nix eval --raw ".#darwinConfigurations.\"$name\".system.drvPath"; then
+              echo
+            else
+              echo "FAILED: darwinConfigurations.\"$name\""
+              status=1
+            fi
+            echo "::endgroup::"
+          done
+
+          exit $status
