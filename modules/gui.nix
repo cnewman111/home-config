@@ -42,6 +42,8 @@ in {
     keybind = shift+${mod}+g=scroll_to_bottom
     keybind = ${mod}+e=equalize_splits
     keybind = ${mod}+f=toggle_fullscreen
+    keybind = ${mod}+y=copy_to_clipboard
+    keybind = ${mod}+p=paste_from_clipboard
     keybind = ctrl+n=new_tab
     keybind = ctrl+q=close_tab
   '';
