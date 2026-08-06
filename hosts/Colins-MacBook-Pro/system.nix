@@ -30,6 +30,7 @@
       "jetbrains-toolbox"
       "ghostty"
       "claude"
+      "1password"
     ];
     brews = [
       "displayplacer"

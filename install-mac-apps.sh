@@ -3,7 +3,6 @@
 # Safe to re-run — Homebrew skips already-installed apps.
 
 casks=$(printf '%s\n' \
-  1password \
   google-chrome \
   spotify \
   discord \
