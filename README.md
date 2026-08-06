@@ -82,9 +82,8 @@ Includes: JetBrains Toolbox, Ghostty, Brave, 1Password*, Spotify, Slack, Zoom (a
 
 Home Manager generates your shell config but sources local override files if they exist:
 
-- `~/.zshrc.local` — machine-specific zsh config
-- `~/.bashrc.local` — machine-specific bash config
-- `~/.zprofile.local`, `~/.profile.local` — login-shell equivalents
+- `~/.bashrc.local` / `~/.profile.local` — machine-specific bash config (Linux)
+- `~/.zshrc.local` / `~/.zprofile.local` — machine-specific zsh config (Mac)
 
 Put anything you don't want in the repo here (work credentials, private aliases, machine-specific PATH entries, etc.). These files are never managed or overwritten by Home Manager.
 
@@ -120,13 +119,15 @@ home-config/
 │   ├── TODO-work-desktop/        # work desktop (rename to real hostname)
 │   └── Colins-MacBook-Pro/       # system.nix (nix-darwin) + home.nix (user)
 ├── modules/                      # composable feature modules
-│   ├── common.nix                # always applied; pulls in shell/git/dev
-│   ├── shell.nix                 # zsh + bash, aliases, local-override hooks
+│   ├── common.nix                # always applied; pulls in git/dev
+│   ├── aliases.nix               # shared shell aliases (plain attrset)
+│   ├── bash.nix                  # login shell on Linux
+│   ├── zsh.nix                   # login shell on macOS
 │   ├── git.nix                   # git identity + gh
-│   ├── dev.nix                   # CLI tools + LazyVim bootstrap
+│   ├── dev.nix                   # CLI tools, btop, LazyVim bootstrap
 │   ├── gui.nix                   # fonts + ghostty config (opt out for headless)
-│   ├── darwin.nix                # Mac-only user config
-│   └── linux.nix                 # Linux-only user config
+│   ├── darwin.nix                # Mac-only user config (imports zsh.nix)
+│   └── linux.nix                 # Linux-only user config (imports bash.nix)
 └── configs/
     ├── karabiner.json            # Karabiner key mapping (Mac)
     ├── zprofile                  # pre-existing Mac zsh profile
@@ -137,3 +138,4 @@ home-config/
 - A headless/server host is just a host that doesn't import `gui.nix`.
 - On Mac, `hosts/Colins-MacBook-Pro/system.nix` is the nix-darwin entry point and pulls in `home.nix` as a home-manager module, so one `darwin-rebuild switch` applies both layers.
 - On Linux, because there is more variety in system hardware, we don't manage system settings — only the user environment.
+- One shell per platform: bash on Linux, zsh on macOS. Aliases are shared via `modules/aliases.nix` so they can't drift.

@@ -1,6 +1,8 @@
 { lib, ... }:
 
 {
+  imports = [ ./zsh.nix ];
+
   programs.zsh.profileExtra = lib.mkBefore (builtins.readFile ../configs/zprofile);
 
   # Karabiner rewrites this file itself when settings change in its UI, so the

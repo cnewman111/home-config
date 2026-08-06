@@ -1,6 +1,8 @@
 { pkgs, lib, ... }:
 
 {
+  imports = [ ./bash.nix ];
+
   home.packages = with pkgs; [
     meld
     pax-utils

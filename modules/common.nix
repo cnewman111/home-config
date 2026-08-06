@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./shell.nix
     ./git.nix
     ./dev.nix
   ];
