@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [ ./zsh.nix ./jetbrains.nix ];
+  imports = [ ./zsh.nix ./bash.nix ./jetbrains.nix ];
 
   # Counterpart to the alias in modules/darwin.nix. The flake attr auto-detects
   # as $(whoami)@$(hostname -s), so no attr is needed. -b is the standalone
