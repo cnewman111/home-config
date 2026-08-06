@@ -23,7 +23,9 @@
       vim_keys = true;
       theme_background = false;
       truecolor = true;
-      proc_tree = true;
+      # Flat process list, not the tree. proc_aggregate only takes effect in
+      # tree view, so it's left on for when the tree is toggled with `t`.
+      proc_tree = false;
       proc_aggregate = true;
     };
   };
