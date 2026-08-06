@@ -11,9 +11,9 @@ Organized by **machine, not platform**: `hosts/<hostname>/home.nix` composes the
 ## Apply / update commands
 
 ```bash
-# Linux — attr auto-detects as $(whoami)@$(hostname -s). Uses the pinned
-# home-manager from programs.home-manager.enable, not upstream master.
-home-manager switch --flake ~/sources/home-config
+# Linux — attr auto-detects as $(whoami)@$(hostname -s)
+# or just: apply-home-config   (alias defined per-platform in modules/{linux,darwin}.nix)
+home-manager switch -b before-hm --flake ~/sources/home-config
 
 # Mac (first run, or any time nix isn't on sudo's PATH)
 sudo nix run nix-darwin -- switch --flake ~/sources/home-config#Colins-MacBook-Pro

@@ -141,4 +141,18 @@ The work desktop is stubbed as `hosts/TODO-work-desktop/`. On that machine, rena
 
 ### Note on `nix run home-manager/master`
 
-The short form only works if your flake registry has a `home-manager` entry. If you're behind a registry that replaces the public one, use `github:nix-community/home-manager` instead — or just use the `home-manager` binary this config puts on your PATH.
+The short form is a flake-registry lookup, and it fails on the work machines: `~/.config/nix/nix.conf` points `flake-registry` at an internal registry that *replaces* the public one, and that registry has `nixpkgs` but no `home-manager` entry.
+
+So use either the binary this config installs (what `apply-home-config` does):
+
+```bash
+home-manager switch -b before-hm --flake ~/sources/home-config
+```
+
+or the explicit URL, which is also what the first-ever apply needs since the binary isn't on PATH yet:
+
+```bash
+nix run github:nix-community/home-manager -- switch --flake .
+```
+
+If you want the short form to work anyway, `nix registry add home-manager github:nix-community/home-manager` writes a user-level entry that layers over the `flake-registry` setting.
