@@ -1,20 +1,18 @@
 { ... }:
 
-let
-  userInfo = import ../user.nix;
-in {
+{
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
 
   # Determinate Systems installer manages the Nix daemon and settings.
   nix.enable = false;
 
-  system.primaryUser = userInfo.username;
+  system.primaryUser = "ccnewman";
   system.stateVersion = 5;
 
-  users.users.${userInfo.username} = {
-    name = userInfo.username;
-    home = "/Users/${userInfo.username}";
+  users.users.ccnewman = {
+    name = "ccnewman";
+    home = "/Users/ccnewman";
   };
 
   homebrew = {

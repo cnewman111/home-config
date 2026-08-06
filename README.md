@@ -2,6 +2,8 @@
 
 Personal configuration managed with [Nix Home Manager](https://github.com/nix-community/home-manager). On macOS, [nix-darwin](https://github.com/nix-darwin/nix-darwin) layers on top to manage system-level config and core Homebrew casks.
 
+Config is composed per machine: each host under `hosts/` picks the feature modules it wants from `modules/`.
+
 ## Setup
 
 ### 1. Install Nix
@@ -15,25 +17,33 @@ Clone wherever you keep projects. The examples below assume `~/sources/home-conf
 nix shell nixpkgs#git --command git clone https://github.com/cnewman111/home-config.git ~/sources/home-config
 ```
 
-### 3. Pick a machine branch
+### 3. Apply the config
 
-`main` ships with a placeholder username so applying it directly fails fast. Every machine gets its own long-lived branch:
+Home Manager auto-detects the configuration named `$(whoami)@$(hostname -s)`, so on a known machine no attribute is needed:
 
 ```bash
-git checkout -b machine/$(hostname -s)
-$EDITOR user.nix          # set: username = "your-username";
-git commit -am 'set username for this machine'
+cd ~/sources/home-config
+nix run home-manager/master -- switch --flake .
 ```
 
-Stay on this branch for all future `switch` runs. To pick up shared updates, pull `main` into the branch — don't merge the username change back to `main`.
+| Machine        | Attribute                              | Command                                                                   |
+|----------------|----------------------------------------|---------------------------------------------------------------------------|
+| Work laptop    | `cnewman@cnewman-5690-ubuntu`          | `nix run home-manager/master -- switch --flake .`                         |
+| Work desktop   | `cnewman@TODO-work-desktop`            | *(hostname not yet filled in — see below)*                                |
+| MacBook Pro    | `Colins-MacBook-Pro`                   | `sudo nix run nix-darwin -- switch --flake .#Colins-MacBook-Pro`          |
 
-### 4. Apply the config
+After the first apply, the Mac command shortens to:
+```bash
+sudo darwin-rebuild switch --flake ~/sources/home-config#Colins-MacBook-Pro
+```
 
-| Machine type   | Profile    | Command                                                                                  |
-|----------------|------------|------------------------------------------------------------------------------------------|
-| Mac            | `darwin`   | `sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin`                 |
-| Linux desktop  | `linux`    | `nix run home-manager/master -- switch --flake ~/sources/home-config#linux`              |
-| Linux headless | `headless` | `nix run home-manager/master -- switch --flake ~/sources/home-config#headless`           |
+### 4. Adding a machine
+
+1. `mkdir hosts/$(hostname -s)` and add a `home.nix` — copy `hosts/cnewman-5690-ubuntu/home.nix` as a starting point. Set `home.username` / `home.homeDirectory` and import the modules you want.
+2. Add an entry to `homeConfigurations` in `flake.nix`, keyed `"<user>@<hostname>"`.
+3. `nix run home-manager/master -- switch --flake .`
+
+The work desktop is stubbed as `hosts/TODO-work-desktop/`. On that machine, rename the directory to its real `hostname -s`, confirm the username, and update the matching key in `flake.nix`.
 
 **Mac prerequisites:**
 
@@ -41,22 +51,14 @@ Stay on this branch for all future `switch` runs. To pick up shared updates, pul
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
-2. `sudo` is required because system activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix` on its PATH, use:
-   ```bash
-   sudo nix run nix-darwin -- switch --flake ~/sources/home-config#darwin
-   ```
-3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox) is already installed *outside* of Homebrew, run this to hand ownership to brew without re-downloading:
+2. `sudo` is required because system activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix` on its PATH, use the `sudo nix run nix-darwin -- ...` form above.
+3. If any core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox, Ghostty) is already installed *outside* of Homebrew, run this to hand ownership to brew without re-downloading:
    ```bash
    brew install --cask --adopt <cask-name>
    ```
    Casks already installed via brew are fine — `brew bundle` skips them.
 
-After the first apply, the Mac command shortens to:
-```bash
-sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
-```
-
-**Pre-existing dotfiles:** home-manager will refuse to overwrite an existing `~/.zshrc`, `~/.bashrc`, etc. Move them aside (or merge what you want into `~/.zshrc.local`) before applying.
+**Pre-existing dotfiles:** on a machine that has never been switched, Home Manager will refuse to overwrite an existing `~/.zshrc`, `~/.bashrc`, etc. Move them aside (or merge what you want into `~/.zshrc.local`) before applying.
 
 ### 5. Optional GUI apps
 
@@ -82,19 +84,24 @@ Home Manager generates your shell config but sources local override files if the
 
 - `~/.zshrc.local` — machine-specific zsh config
 - `~/.bashrc.local` — machine-specific bash config
+- `~/.zprofile.local`, `~/.profile.local` — login-shell equivalents
 
 Put anything you don't want in the repo here (work credentials, private aliases, machine-specific PATH entries, etc.). These files are never managed or overwritten by Home Manager.
 
 ## Usage
 
-Apply changes or update packages:
-
 ```bash
-# Mac — apply changes after editing any Mac config
-sudo darwin-rebuild switch --flake ~/sources/home-config#darwin
+# apply changes after editing any config
+nix run home-manager/master -- switch --flake ~/sources/home-config          # Linux
+sudo darwin-rebuild switch --flake ~/sources/home-config#Colins-MacBook-Pro  # Mac
 
-# Linux — apply changes after editing the profile
-nix run home-manager/master -- switch --flake ~/sources/home-config#<profile>
+# check that every host still evaluates, without building
+nix eval --raw .#homeConfigurations."cnewman@cnewman-5690-ubuntu".activationPackage.drvPath
+nix eval --raw .#darwinConfigurations."Colins-MacBook-Pro".system.drvPath
+
+# see what a change would actually do before applying it
+nix build .#homeConfigurations."cnewman@cnewman-5690-ubuntu".activationPackage
+nix run nixpkgs#nvd -- diff ~/.local/state/nix/profiles/home-manager ./result
 
 # update all packages to latest (any platform)
 nix flake update ~/sources/home-config
@@ -105,21 +112,28 @@ nix flake update ~/sources/home-config
 
 ```
 home-config/
-├── flake.nix                     # entry point, pins nixpkgs, home-manager, nix-darwin
-├── user.nix                      # username (edit this when forking)
-├── common.nix                    # packages, shell config, git, aliases shared across machines
-├── zprofile                      # existing zsh profile (included by common.nix)
+├── flake.nix                     # mkHome / mkDarwin factories, one entry per machine
 ├── install-mac-apps.sh           # optional Mac GUI apps (brew casks)
 ├── install-linux-apps.sh         # optional Linux GUI apps (snap)
-├── configs/
-│   ├── karabiner.json            # karabiner key mapping template (seeded on first run)
-│   └── nvim/lua/                 # custom LazyVim plugin config
-└── profiles/
-    ├── darwin.nix                # Mac home-manager (user) config
-    ├── darwin-system.nix         # Mac nix-darwin (system) config + core casks
-    ├── linux.nix                 # Linux desktop
-    └── headless.nix              # Linux server / headless
+├── hosts/                        # one directory per machine
+│   ├── cnewman-5690-ubuntu/      # work laptop
+│   ├── TODO-work-desktop/        # work desktop (rename to real hostname)
+│   └── Colins-MacBook-Pro/       # system.nix (nix-darwin) + home.nix (user)
+├── modules/                      # composable feature modules
+│   ├── common.nix                # always applied; pulls in shell/git/dev
+│   ├── shell.nix                 # zsh + bash, aliases, local-override hooks
+│   ├── git.nix                   # git identity + gh
+│   ├── dev.nix                   # CLI tools + LazyVim bootstrap
+│   ├── gui.nix                   # fonts + ghostty config (opt out for headless)
+│   ├── darwin.nix                # Mac-only user config
+│   └── linux.nix                 # Linux-only user config
+└── configs/
+    ├── karabiner.json            # Karabiner key mapping (Mac)
+    ├── zprofile                  # pre-existing Mac zsh profile
+    └── nvim/lua/                 # custom LazyVim config
 ```
 
-- On Mac, `darwin-system.nix` is the entry point and pulls in `darwin.nix` as a home-manager module. 
-- On Linux, because there is more variety in system hardware, we do not adjust system settings. All modules are installed via the script.
+- `modules/common.nix` is applied to every host by the factories in `flake.nix`; everything else is opt-in via a host's `imports`.
+- A headless/server host is just a host that doesn't import `gui.nix`.
+- On Mac, `hosts/Colins-MacBook-Pro/system.nix` is the nix-darwin entry point and pulls in `home.nix` as a home-manager module, so one `darwin-rebuild switch` applies both layers.
+- On Linux, because there is more variety in system hardware, we don't manage system settings — only the user environment.

@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration";
+  description = "Home Manager + nix-darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -15,31 +15,41 @@
 
   outputs = { nixpkgs, home-manager, nix-darwin, ... }:
     let
-      userInfo = import ./user.nix;
-      makeConfig = system: profile: home-manager.lib.homeManagerConfiguration {
+      mkHome = system: hostModule: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
         };
-        modules = [ profile ];
+        modules = [ ./modules/common.nix hostModule ];
       };
-    in {
-      darwinConfigurations.darwin = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
+
+      mkDarwin = system: username: hostDir: nix-darwin.lib.darwinSystem {
+        inherit system;
         modules = [
-          ./profiles/darwin-system.nix
+          (hostDir + "/system.nix")
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${userInfo.username} = import ./profiles/darwin.nix;
+            home-manager.users.${username}.imports = [
+              ./modules/common.nix
+              (hostDir + "/home.nix")
+            ];
           }
         ];
       };
-
+    in {
       homeConfigurations = {
-        "linux"    = makeConfig "x86_64-linux" ./profiles/linux.nix;
-        "headless" = makeConfig "x86_64-linux" ./profiles/headless.nix;
+        "cnewman@cnewman-5690-ubuntu" =
+          mkHome "x86_64-linux" ./hosts/cnewman-5690-ubuntu/home.nix;
+
+        # TODO: rename to the work desktop's real `hostname -s` and confirm the
+        # username, then rename hosts/TODO-work-desktop/ to match.
+        "cnewman@TODO-work-desktop" =
+          mkHome "x86_64-linux" ./hosts/TODO-work-desktop/home.nix;
       };
+
+      darwinConfigurations."Colins-MacBook-Pro" =
+        mkDarwin "aarch64-darwin" "ccnewman" ./hosts/Colins-MacBook-Pro;
     };
 }
