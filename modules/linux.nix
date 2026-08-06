@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [ ./bash.nix ];
+  imports = [ ./bash.nix ./jetbrains.nix ];
 
   home.packages = with pkgs; [
     meld
