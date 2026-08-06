@@ -10,14 +10,22 @@
 # had before this module existed.
 #
 # Managed here:
-#   keymaps/GNOME copy.xml  — key bindings
-#   options/ui.lnf.xml      — UI_DENSITY=COMPACT (compact mode)
+#   keymaps/GNOME copy.xml     — key bindings (all IDEs)
+#   options/ui.lnf.xml         — UI_DENSITY=COMPACT (all IDEs)
+#   options/window.layouts.xml — tool window order (CLion only)
+#
+# The layout puts alt+1..6 in the upper left sidebar and alt+7,8,9,0 in the
+# lower one (that's what "isSplit": true means), so the sidebar reads in
+# keyboard order. It's CLion-only because it references CMake/Meson.
+#
+# JetBrains has no global/shared config dir — every setting is per-IDE-per-
+# version, which is why this module fans out instead. Note window.layouts.xml
+# is rewritten whenever you drag a tool window, so the repo wins on the next
+# switch: adjust configs/jetbrains/window.layouts.xml rather than dragging.
 #
 # ui.lnf.xml only ever holds UISettings; the theme lives in laf.xml, which is
-# deliberately NOT managed. Two files that look tempting but shouldn't be
-# managed: window.state.xml (rewritten on every window move, and keyed by
-# monitor geometry) and window.layouts.xml (rewritten whenever a tool window is
-# dragged).
+# deliberately NOT managed. window.state.xml is also left alone — it's
+# rewritten on every window move and keyed by monitor geometry.
 #
 # The IDE rewrites these files when you change settings in its GUI, and
 # activation overwrites them back on the next switch — so edit the repo copies
@@ -33,6 +41,16 @@
         "$dir/keymaps/GNOME copy.xml"
       $DRY_RUN_CMD install -m 644 ${../configs/jetbrains/ui.lnf.xml} \
         "$dir/options/ui.lnf.xml"
+
+      # Tool window layout is CLion-only: it references CMake/Meson, and the
+      # sidebar order is built around CLion's alt+N bindings. Other IDEs keep
+      # whatever layout they have (import from CLion manually if wanted).
+      case "$dir" in
+        *"/CLion"*)
+          $DRY_RUN_CMD install -m 644 ${../configs/jetbrains/window.layouts.xml} \
+            "$dir/options/window.layouts.xml"
+          ;;
+      esac
     done
   '';
 }
