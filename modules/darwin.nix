@@ -1,14 +1,13 @@
 { lib, ... }:
 
-let
+{
+  imports = [ ./zsh.nix ];
+
   # Same alias name on every machine, different body per platform — see
   # modules/linux.nix. $(hostname -s) matches the flake's darwinConfigurations
   # key, so this line needs no edit on a new Mac.
-  applyAliases.apply-home-config =
+  programs.zsh.shellAliases.apply-home-config =
     "sudo darwin-rebuild switch --flake ~/sources/home-config#$(hostname -s)";
-in {
-  programs.zsh.shellAliases = applyAliases;
-  programs.bash.shellAliases = applyAliases;
 
   programs.zsh.profileExtra = lib.mkBefore (builtins.readFile ../configs/zprofile);
 
