@@ -1,9 +1,9 @@
-# Login shell on macOS (the platform default since 10.15). Imported by
-# modules/darwin.nix.
+# zsh: login shell on macOS (the platform default since 10.15), and on Linux
+# via modules/linux.nix — imported by both platform modules.
 #
-# macOS does not ship the bash-completion scripts the Linux hosts get from
-# Ubuntu, so completion is enabled explicitly here along with the two plugins
-# that make zsh worth using over bash.
+# Completion is enabled explicitly because macOS doesn't ship the
+# bash-completion scripts Ubuntu provides, along with the two plugins that make
+# zsh worth using over bash: autosuggestion and syntax highlighting.
 { ... }:
 
 {
