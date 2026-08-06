@@ -36,25 +36,25 @@
         },
         {
           "id": "Find",
-          "order": 0,
+          "order": 6,
           "weight": 0.25,
           "isSplit": true
         },
         {
           "id": "Terminal",
-          "order": 1,
+          "order": 7,
           "weight": 0.25,
           "isSplit": true
         },
         {
           "id": "Version Control",
-          "order": 2,
+          "order": 8,
           "weight": 0.25,
           "isSplit": true
         },
         {
           "id": "CMake",
-          "order": 3,
+          "order": 9,
           "weight": 0.25,
           "isSplit": true
         },
