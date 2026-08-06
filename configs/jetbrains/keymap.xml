@@ -54,5 +54,8 @@
   <action id="SwitchHeaderSource">
     <keyboard-shortcut first-keystroke="alt s" />
   </action>
+  <action id="ToggleFullScreen">
+    <keyboard-shortcut first-keystroke="alt f" />
+  </action>
   <action id="context.load" />
 </keymap>
