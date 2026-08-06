@@ -9,6 +9,7 @@ in {
   # (install-linux-apps.sh). This writes config only.
   home.file.".config/ghostty/config".text = ''
     font-family = JetBrainsMono Nerd Font
+    theme = Idea
     keybind = ${mod}+h=goto_split:left
     keybind = ${mod}+j=goto_split:bottom
     keybind = ${mod}+k=goto_split:top
