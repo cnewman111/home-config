@@ -34,4 +34,20 @@
       [ -f ~/.zprofile.local ] && source ~/.zprofile.local
     '';
   };
+
+  # zsh's default prompt is just `%m%#` — hostname, no path. starship gives cwd,
+  # git branch and dirty state, exit codes and command duration out of the box.
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      # The hostname is already in the terminal title; the path matters more.
+      hostname.ssh_only = true;
+      directory.truncation_length = 4;
+      directory.truncate_to_repo = false;
+      cmd_duration.min_time = 2000;
+      # Work machines have AWS env vars set; the region/profile is noise here.
+      aws.disabled = true;
+    };
+  };
 }
