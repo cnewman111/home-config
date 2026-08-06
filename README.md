@@ -57,13 +57,13 @@ hosts/                 one directory per machine
 modules/               composable features
   common.nix             always applied; pulls in git.nix + dev.nix
   aliases.nix            shared shell aliases (plain attrset, not a module)
-  bash.nix               login shell on Linux
-  zsh.nix                login shell on macOS
+  zsh.nix                main shell config (both platforms)
+  bash.nix               minimal bash fallback (Linux: SSH, cron, Ctrl+Alt+T)
   git.nix                git identity, gh, nvimdiff difftool
   dev.nix                CLI tools, btop, LazyVim bootstrap
   gui.nix                fonts + ghostty config
   jetbrains.nix          JetBrains keymap sync (Linux)
-  linux.nix              Linux-only user config (imports bash.nix)
+  linux.nix              Linux-only user config (imports zsh.nix + bash.nix)
   darwin.nix             Mac-only user config (imports zsh.nix)
 configs/               non-Nix config files
   jetbrains/keymap.xml   JetBrains keymap, synced to every IDE version dir
@@ -76,7 +76,7 @@ How it composes:
 
 - `modules/common.nix` is applied to every host by the factories in `flake.nix`. Everything else is opt-in via a host's `imports` list.
 - A headless/server host is simply one that doesn't import `gui.nix`.
-- One shell per platform: bash on Linux, zsh on macOS. Aliases live once in `aliases.nix` so the two can't drift.
+- zsh on both platforms. On Linux the login shell is still bash, so ghostty and the JetBrains terminals are pointed at zsh directly; `bash.nix` keeps SSH/cron shells usable.
 - On the Mac, `system.nix` is the nix-darwin entry point and pulls in `home.nix` as a Home Manager module — one `darwin-rebuild switch` applies both layers.
 - On Linux there's no system layer; hardware varies too much to manage declaratively.
 
@@ -84,8 +84,8 @@ How it composes:
 
 Home Manager generates your shell config but sources these if they exist. They are never managed or overwritten:
 
-- Linux — `~/.bashrc.local`, `~/.profile.local`
-- Mac — `~/.zshrc.local`, `~/.zprofile.local`
+- `~/.zshrc.local`, `~/.zprofile.local` (both platforms)
+- `~/.bashrc.local`, `~/.profile.local` (Linux bash fallback)
 
 This is where machine-specific and private config belongs: work credentials, private aliases, per-machine PATH entries. Don't move their contents into the repo.
 
@@ -110,7 +110,7 @@ Linux installs via snap. Note the snap 1Password unlocks separately from the bro
      git clone https://github.com/cnewman111/home-config.git ~/sources/home-config
    ```
 
-3. **Move pre-existing dotfiles aside.** Home Manager refuses to overwrite an existing `~/.bashrc` (Linux) or `~/.zshrc` (Mac). Merge anything you want to keep into the matching `.local` file.
+3. **Move pre-existing dotfiles aside.** Home Manager refuses to overwrite an existing `~/.zshrc`. Merge anything you want to keep into the matching `.local` file.
 
 4. **Apply** — first run needs the full flake URL, since `home-manager` isn't on PATH yet:
    ```bash

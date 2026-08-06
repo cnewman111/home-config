@@ -1,5 +1,6 @@
-# Shared shell aliases, consumed by both bash.nix and zsh.nix so the two
-# shells can never drift apart. This is a plain attrset, not a module.
+# Shared shell aliases, imported by modules/zsh.nix. Kept as a separate plain
+# attrset (not a module) so aliases stay independent of shell config — both
+# platforms run zsh, but a second shell would consume this same list.
 {
   ga  = "git add";
   gcm = "git commit -m";
