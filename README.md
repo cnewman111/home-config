@@ -62,6 +62,7 @@ modules/               composable features
   git.nix                git identity, gh, nvimdiff difftool
   dev.nix                CLI tools, btop, LazyVim bootstrap
   gui.nix                fonts + ghostty config
+  gnome.nix              GNOME settings via dconf (Linux)
   jetbrains.nix          JetBrains keymap sync (Linux)
   linux.nix              Linux-only user config (imports zsh.nix + bash.nix)
   darwin.nix             Mac-only user config (imports zsh.nix)
@@ -79,6 +80,18 @@ How it composes:
 - zsh on both platforms. On Linux the login shell is still bash, so ghostty and the JetBrains terminals are pointed at zsh directly; `bash.nix` keeps SSH/cron shells usable.
 - On the Mac, `system.nix` is the nix-darwin entry point and pulls in `home.nix` as a Home Manager module — one `darwin-rebuild switch` applies both layers.
 - On Linux there's no system layer; hardware varies too much to manage declaratively.
+
+## GNOME settings
+
+`modules/gnome.nix` declares the GNOME settings shared by both Linux machines — dark Yaru-red theme, Caps Lock as Ctrl, super+hjkl tiling, ctrl+alt+hl workspace switching, blank-and-lock timings, Nautilus list view. Home Manager writes them on every switch, so **the repo wins over the Settings GUI**: change a setting there and the next `home-manager switch` puts it back. Edit the module instead.
+
+Truly per-machine values (pointer speed) live in the host's `home.nix`, not the shared module. To see what you've changed on a machine before pulling it in:
+
+```bash
+dconf dump /org/gnome/ > /tmp/gnome.ini
+```
+
+Skip anything GNOME rewrites on its own — dock favourites, app-picker layout, notification app lists, window geometry, `command-history`. Declaring those means the config fights you every switch.
 
 ## Local overrides
 
