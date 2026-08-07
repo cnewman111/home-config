@@ -7,7 +7,7 @@ Composed per machine — each host under `hosts/` picks the feature modules it w
 | Machine      | Attribute                      | Switch with                                                        |
 |--------------|--------------------------------|--------------------------------------------------------------------|
 | Work laptop  | `cnewman@cnewman-5690-ubuntu`  | `home-manager switch --flake .`                                    |
-| Work desktop | `cnewman@TODO-work-desktop`    | same (rename the host first — see [Adding a machine](#adding-a-machine)) |
+| Work desktop | `cnewman@cnewman-22250-ubuntu` | `home-manager switch --flake .`                                    |
 | MacBook Pro  | `Colins-MacBook-Pro`           | `sudo darwin-rebuild switch --flake .#Colins-MacBook-Pro`          |
 
 On Linux the attribute auto-detects from `$(whoami)@$(hostname -s)`, so no `#attr` is needed.
@@ -52,7 +52,7 @@ home-manager generations          # list
 flake.nix              mkHome / mkDarwin factories, one entry per machine
 hosts/                 one directory per machine
   cnewman-5690-ubuntu/   work laptop            → home.nix
-  TODO-work-desktop/     work desktop (stub)    → home.nix
+  cnewman-22250-ubuntu/  work desktop           → home.nix
   Colins-MacBook-Pro/    MacBook                → system.nix + home.nix
 modules/               composable features
   common.nix             always applied; pulls in git.nix + dev.nix
@@ -137,7 +137,11 @@ Linux installs via snap. Note the snap 1Password unlocks separately from the bro
 2. Add an entry to `homeConfigurations` in `flake.nix`, keyed `"<user>@<hostname>"`.
 3. Apply.
 
-The work desktop is stubbed as `hosts/TODO-work-desktop/`. On that machine, rename the directory to its real `hostname -s`, confirm the username, and update the matching key in `flake.nix`.
+### Git identity
+
+`modules/git.nix` writes the personal identity to `~/.config/git/config`. Git reads that file *before* `~/.gitconfig`, so an unmanaged `~/.gitconfig` overrides it — that's where the work machines keep `user.email = cnewman@anduril.com`, and it's deliberately outside the repo like the other `.local` overrides. Personal repos opt back in with a repo-local `git config user.email`.
+
+Authenticate the two accounts with separate SSH keys — `~/.ssh/config` pins each host to one key with `IdentitiesOnly yes` so the wrong key is never offered.
 
 ### Mac prerequisites
 

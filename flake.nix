@@ -46,10 +46,8 @@
         "cnewman@cnewman-5690-ubuntu" =
           mkHome "x86_64-linux" ./hosts/cnewman-5690-ubuntu/home.nix;
 
-        # TODO: rename to the work desktop's real `hostname -s` and confirm the
-        # username, then rename hosts/TODO-work-desktop/ to match.
-        "cnewman@TODO-work-desktop" =
-          mkHome "x86_64-linux" ./hosts/TODO-work-desktop/home.nix;
+        "cnewman@cnewman-22250-ubuntu" =
+          mkHome "x86_64-linux" ./hosts/cnewman-22250-ubuntu/home.nix;
       };
 
       darwinConfigurations."Colins-MacBook-Pro" =

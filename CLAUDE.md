@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal cross-machine config managed with Nix flakes: Home Manager on every machine, plus nix-darwin layered on top for the Mac (system-level settings + core Homebrew casks).
 
-Organized by **machine, not platform**: `hosts/<hostname>/home.nix` composes the feature modules it wants from `modules/`. Three machines: work laptop (`cnewman-5690-ubuntu`), work desktop (stubbed as `TODO-work-desktop`), and MacBook Pro (`Colins-MacBook-Pro`, user `ccnewman`).
+Organized by **machine, not platform**: `hosts/<hostname>/home.nix` composes the feature modules it wants from `modules/`. Three machines: work laptop (`cnewman-5690-ubuntu`), work desktop (`cnewman-22250-ubuntu`), and MacBook Pro (`Colins-MacBook-Pro`, user `ccnewman`).
 
 ## Apply / update commands
 
