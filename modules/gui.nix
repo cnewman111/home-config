@@ -54,6 +54,6 @@ in {
     keybind = ${mod}+p=paste_from_clipboard
     keybind = ctrl+n=new_tab
     keybind = ctrl+q=close_tab
-    keybind = ctrl+r=prompt_tab_title
+    keybind = ${mod}+r=prompt_tab_title
   '';
 }
