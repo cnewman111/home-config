@@ -91,10 +91,11 @@ This is where machine-specific and private config belongs: work credentials, pri
 
 ## Optional GUI apps
 
-Apps that aren't on every machine are installed by interactive `fzf` pickers, deliberately outside Nix. Run **after** applying the config.
+On the Mac every GUI app is declared as a Homebrew cask in `hosts/Colins-MacBook-Pro/system.nix` and installed by `darwin-rebuild switch`. There is no picker script.
+
+Linux has no system layer, so its GUI apps are still installed by an interactive `fzf` picker outside Nix. Run **after** applying the config.
 
 ```bash
-./install-mac-apps.sh     # 1Password, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN
 ./install-linux-apps.sh   # JetBrains Toolbox, Ghostty, Brave, 1Password, Spotify, Slack, Zoom
 ```
 
@@ -133,7 +134,7 @@ The work desktop is stubbed as `hosts/TODO-work-desktop/`. On that machine, rena
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 2. **`sudo` is required** — activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix`, use the `sudo nix run nix-darwin -- ...` form.
-3. **Adopt existing casks.** If a core cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox, Ghostty) was installed outside Homebrew:
+3. **Adopt existing casks.** If any declared cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox, Ghostty, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN) was installed outside Homebrew:
    ```bash
    brew install --cask --adopt <cask-name>
    ```

@@ -20,7 +20,7 @@
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # "none" leaves casks installed outside this list (e.g. via install-mac-apps.sh) alone.
+      # "none" leaves casks installed by hand outside this list alone.
       cleanup = "none";
     };
     casks = [
@@ -31,6 +31,12 @@
       "ghostty"
       "claude"
       "1password"
+      "google-chrome"
+      "spotify"
+      "discord"
+      "whatsapp"
+      "zoom"
+      "protonvpn"
     ];
     brews = [
       "displayplacer"
