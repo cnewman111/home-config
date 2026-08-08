@@ -151,7 +151,7 @@ Authenticate the two accounts with separate SSH keys — `~/.ssh/config` pins ea
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 2. **`sudo` is required** — activation writes to `/etc/` and `/run/current-system`. If sudo can't find `nix`, use the `sudo nix run nix-darwin -- ...` form.
-3. **Adopt existing casks.** If any declared cask (Karabiner-Elements, Raycast, Brave, JetBrains Toolbox, Ghostty, Chrome, Spotify, Discord, WhatsApp, Slack, Zoom, ProtonVPN) was installed outside Homebrew:
+3. **Adopt existing casks.** If a cask declared in `hosts/Colins-MacBook-Pro/system.nix` was already installed outside Homebrew:
    ```bash
    brew install --cask --adopt <cask-name>
    ```

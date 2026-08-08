@@ -30,6 +30,8 @@
       "jetbrains-toolbox"
       "ghostty"
       "claude"
+      "chatgpt"
+      "chatgpt-atlas"
       "1password"
       "google-chrome"
       "spotify"
