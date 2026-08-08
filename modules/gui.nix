@@ -16,6 +16,14 @@ let
 in {
   home.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
+  # Index the fonts installed above into ~/.local/share/fonts so fontconfig —
+  # and therefore every GTK/GNOME app — can actually resolve them by family
+  # name. Without this the font is on disk but invisible: `fc-match
+  # 'JetBrainsMono Nerd Font'` falls back to DejaVu Sans, and setting it as
+  # GNOME's monospace font silently does nothing. ghostty loads its font by path
+  # from the nix store, which is why it looked fine regardless.
+  fonts.fontconfig.enable = true;
+
   # ghostty itself is not installed here: brew cask on Mac, snap on Linux
   # (install-linux-apps.sh). This writes config only.
   home.file.".config/ghostty/config".text = ''
@@ -46,5 +54,6 @@ in {
     keybind = ${mod}+p=paste_from_clipboard
     keybind = ctrl+n=new_tab
     keybind = ctrl+q=close_tab
+    keybind = ${mod}+r=prompt_tab_title
   '';
 }

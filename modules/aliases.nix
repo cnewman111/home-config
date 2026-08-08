@@ -9,6 +9,6 @@
   gp  = "git push";
   gpl = "git pull";
   gdt = "git difftool";
-  nd  = "nix develop";
-  ndc = "nix develop --command";
+  nd  = "nix develop --builders ''";
+  ndc = "nix develop --builders '' --command";
 }
